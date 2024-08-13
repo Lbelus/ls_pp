@@ -5,7 +5,9 @@ SRC_DIRS := ./src
 CFLAGS = -fsanitize=address -Wall -Wextra -Werror
 LDFLAGS = $(CFLAGS)
 
-export CPLUS_INCLUDE_PATH=include/
+CXXOPTS_DIR := extern/cxxopts/include
+
+export CPLUS_INCLUDE_PATH=include/:$(CXXOPTS_DIR)
 
 SRCS_CPP := $(shell find $(SRC_DIRS) -name '*.cpp')
 
@@ -46,6 +48,8 @@ clean:
 	rm $(shell find $(BUILD_DIR) -name '*.o')
 	rm $(BUILD_DIR)/$(TARGET_EXEC)
 	rm $(TARGET_EXEC)
+	mkdir $(BUILD_DIR)
+	touch $(BUILD_DIR)/.gitkeep
 
 fclean:
 	rm -r $(BUILD_DIR)
@@ -57,6 +61,8 @@ debug:  $(OBJS_CPP)
 debugc:
 	rm -r $(BUILD_DIR)
 	rm debug
+	mkdir $(BUILD_DIR)
+	touch $(BUILD_DIR)/.gitkeep
 
 # Include the .d makefiles. The - at the front suppresses the errors of missing
 # Makefiles. Initially, all the .d files will be missing, and we don't want those
