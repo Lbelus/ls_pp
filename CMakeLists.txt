@@ -16,22 +16,18 @@ endif()
 # Add include directories
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
-# Add NASM source files
-file(GLOB_RECURSE ASM_SOURCES "src/*.asm")
 
-# Add source files excluding main.c
-file(GLOB_RECURSE SOURCES "src/*.c")
-list(FILTER SOURCES EXCLUDE REGEX ".*main\\.c$")
+# Include extern submodule  cxxopts
+add_subdirectory(extern/cxxopts)
+target_include_directories(${TARGET_NAME} PUBLIC cxxopts)
+target_link_libraries(${TARGET_NAME} PUBLIC cxxopts)
 
 # Add source files excluding main.cpp
 file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")
 list(FILTER CPP_SOURCES EXCLUDE REGEX ".*main\\.cpp$")
 
-# Option to enable or disable CFLAGS
-option(ENABLE_CFLAGS "Enable CFLAGS" OFF)
-
 # Create an object library from the source files
-add_library(ls_ppObj OBJECT ${ASM_SOURCES} ${CPP_SOURCES} ${SOURCES})
+add_library(ls_ppObj OBJECT ${CPP_SOURCES})
 
 
 if(ENABLE_CFLAGS)
