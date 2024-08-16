@@ -1,29 +1,47 @@
 #include <common_header.hpp>
 #include <cxxopts.hpp>
 
-int main(int argc, char** argv)
+int main(int argc, char* argv[])
 {
-    cxxopts::Options options("test", "A brief description");
+    cxxopts::Options options("ls_pp", "A simple cpp implementation of ls");
 
     options.add_options()
-        ("b,bar", "Param bar", cxxopts::value<std::string>())
-        ("d,debug", "Enable debugging", cxxopts::value<bool>()->default_value("false"))
-        ("f,foo", "Param foo", cxxopts::value<int>()->default_value("10"))
-        ("h,help", "Print usage")
-    ;
+        ("a,all", "do not ignore entries starting with .", cxxopts::value<bool>()->default_value("false"))
+        ("t,time", "Sort by time, newest first, --time does not makes use the usuals options", cxxopts::value<bool>()->default_value("false"))
+        ("filenames", "The filename(s) to process", cxxopts::value<std::vector<std::string>>())
+        ("h,help", "Print usage");
+
+    options.parse_positional({"filenames"});
 
     auto result = options.parse(argc, argv);
 
     if (result.count("help"))
     {
       std::cout << options.help() << std::endl;
-      exit(0);
+      exit(EXIT_SUCCESS);
     }
-    bool debug = result["debug"].as<bool>();
-    std::string bar;
-    if (result.count("bar"))
-      bar = result["bar"].as<std::string>();
-    int foo = result["foo"].as<int>();
+    std::vector<std::string> filenames = result["filenames"].as<std::vector<std::string>>();
+	if (filenames.size() < 1)
+	{
+      std::cout << options.help() << std::endl;
+      exit(EXIT_SUCCESS);
+	}
+	bool time = result["time"].as<bool>();
+	if (time)
+	{
+		std::cout << "time option is activated" << std::endl;
+	}
+	
+	bool all = result["all"].as<bool>();
+	if (all)
+	{
+		std::cout << "all option is activated" << std::endl;
+	}
 
-    return 0;
+	for (std::vector<std::string>::iterator it = filenames.begin(); it != filenames.end(); ++it)
+	{
+		std::cout << *it << std::endl;
+	}
+
+    return EXIT_SUCCESS;
 }
