@@ -27,38 +27,45 @@ void temp_test_flag(const cxxopts::ParseResult& opt)
 	}
 }
 
-
 void sort_and_display(std::vector<std::string>& filenames, bool all, bool time)
 {
+    std::vector<std::string> result;
+    std::string path;
     for (std::vector<std::string>::iterator it = filenames.begin(); it != filenames.end(); ++it)
 	{
-		std::cout << *it << std::endl;
-		const std::filesystem::path user_path{*it};
-		std::cout << "directory_iterator:\n";
-		// directory_iterator can be iterated using a range-for loop
-		for (auto const& dir_entry : std::filesystem::directory_iterator{user_path})
-		{
-			if (all)
-			{
-    			auto ftime = std::filesystem::last_write_time(dir_entry.path());
-    			auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(
-                    ftime - std::filesystem::file_time_type::clock::now() +
-                    std::chrono::system_clock::now());
-
-			    // Convert to seconds since epoch
-    			double seconds_since_epoch = std::chrono::duration<double>(sctp.time_since_epoch()).count();
-				std::cout << dir_entry.path() << ", time :" << seconds_since_epoch << std::endl;
-
-			}
-			else
-			{
-				std::string path = dir_entry.path(); 
-				if (path[2] != '.')
-				{
-					std::cout << dir_entry.path() << '\n';
-				}
-			}
-		} 
+        const std::filesystem::path user_path{*it};
+		std::cout << *it << ":" << std::endl;
+        get_regular_files(user_path, all);
 	}
 }
 	
+std::vector<std::string> get_regular_files(const std::filesystem::path& user_path, bool all)
+{
+    std::vector<std::string> result;
+    std::string path;
+    // std::filesystem does not include dot and dot-dot local and parent directories ?? what ? why ?
+    if (all)
+    {
+        result.push_back(std::string("."));
+        result.push_back(std::string(".."));
+    }
+    for (auto const& dir_entry : std::filesystem::directory_iterator{user_path})
+    {
+        path = dir_entry.path().lexically_relative(user_path).string();;
+        if (all)
+        {
+            result.push_back(path);
+        }
+        else
+        {
+            if (std::filesystem::is_regular_file(path) && path[0] != '.')
+            {
+                std::cout << path << std::endl;
+            }
+        }
+    }
+    std::cout << std::endl;
+    return result;
+}
+
+
