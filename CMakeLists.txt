@@ -22,10 +22,7 @@ add_subdirectory(extern/cxxopts)
 target_include_directories(ls_ppObj PUBLIC ${cxxopts_SOURCE_DIR}/include)
 
 if(ENABLE_CFLAGS)
-    target_compile_options(ls_ppObj PRIVATE 
-    $<$<COMPILE_LANGUAGE:CXX>:-fsanitize=address -Wall -Wextra -Werror>
-    )
-    # Link with sanitizer library for C and C++ targets
+    target_compile_options(ls_ppObj PRIVATE -fsanitize=address -Wall -Wextra -Werror)
     target_link_libraries(ls_ppObj PRIVATE -fsanitize=address)
 endif()
 

@@ -60,9 +60,10 @@ debug:  $(OBJS_CPP)
 
 debugc:
 	rm -r $(BUILD_DIR)
-	rm debug
 	mkdir $(BUILD_DIR)
 	touch $(BUILD_DIR)/.gitkeep
+	rm debug
+
 
 # Include the .d makefiles. The - at the front suppresses the errors of missing
 # Makefiles. Initially, all the .d files will be missing, and we don't want those
