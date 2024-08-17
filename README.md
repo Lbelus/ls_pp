@@ -3,7 +3,7 @@ A basic implementation of ls in full cpp
 
 
 
-Topics: Static_cast, dynamic_cast, reinterpret_cast
+Topics: std::filesystem, lambda, vector
 
 ## Task
 
@@ -25,15 +25,28 @@ Flags :
 -a include directory entries beginning with a dot (.).
 -t sort by time modified (most recently modified first) before sorting by lexicographical order. ==>Recommendation : make use of tv_sec and tv_nsec.
 
-
-
 ## Installation
+go to ``build`` dir:
+```bash
+cmake ..
+make
+```
 
 
 ## Usage
 
+insert my_ls ``OPTION``... ``file``... into terminal
 
+-t provide a file list sorted by time
+-a provide a list with hidden files
 
+exemple :
+```bash
+   ./ls_pp
+   ./ls_pp -t dir1
+   ./ls_pp -a dir1 
+   ./ls_pp -at dir1 dir2 dir3
+```
 
 ## The Core Team
 * [Lorris BELUS](//github.com/Lbelus) - Developer

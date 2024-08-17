@@ -26,20 +26,6 @@ if(ENABLE_CFLAGS)
     target_link_libraries(ls_ppObj PRIVATE -fsanitize=address)
 endif()
 
-# Option to enable or disable GoogleTest
-option(ENABLE_GTEST "Enable Google Test" OFF)
-
-if(ENABLE_GTEST)
-    enable_testing()
-    find_package(GTest REQUIRED)
-
-    # Add test executable
-    add_executable(ls_pp_tests tests/ls_pp_tests.cc)
-    target_link_libraries(ls_pp_tests PRIVATE GTest::gtest_main ls_ppObj)
-
-    include(GoogleTest)
-    gtest_discover_tests(ls_pp_tests)
-endif()
 
 # Create the main executable with main.cpp
 add_executable(ls_pp src/main.cpp)
